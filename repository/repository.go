@@ -15,7 +15,7 @@ func GetProductById(id string) (model.Product, int) {
 	var product model.Product
 	var productIndex int
 	for index, item := range storage {
-		if item.Id == id {
+		if item.ID == id {
 			product = item
 			productIndex = index
 			break
@@ -27,7 +27,7 @@ func GetProductById(id string) (model.Product, int) {
 
 func CreateProduct(input model.ProductInput) model.Product {
 	var product model.Product = model.Product{
-		Id:          uuid.New().String(),
+		ID:          uuid.New().String(),
 		Name:        input.Name,
 		Description: input.Description,
 		Price:       input.Price,
@@ -55,7 +55,7 @@ func UpdateProduct(id string, input model.ProductInput) model.Product {
 func DeleteProduct(id string) bool {
 	var afterDeleted []model.Product = []model.Product{}
 	for _, item := range storage {
-		if item.Id != id {
+		if item.ID != id {
 			afterDeleted = append(afterDeleted, item)
 		}
 	}
