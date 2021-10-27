@@ -9,9 +9,9 @@ func GetAllProducts() []model.Product {
 	return repository.GetAllProducts()
 }
 
-func GetProductById(id string) model.Product {
-	product, _ := repository.GetProductById(id)
-	return product
+func GetProductById(id string) (model.Product, int64) {
+	product, rows := repository.GetProductById(id)
+	return product, rows
 }
 
 func CreateProduct(input model.ProductInput) model.Product {

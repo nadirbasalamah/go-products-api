@@ -9,10 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDatabase() *gorm.DB {
-	var dataSource string = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Config("DB_USER"), config.Config("DB_PASSWORD"), config.Config("DB_HOST"), config.Config("DB_PORT"), config.Config("DB_NAME"))
+var DB *gorm.DB
 
-	database, err := gorm.Open(mysql.Open(dataSource), &gorm.Config{})
+func InitDatabase() {
+	var dataSource string = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Config("DB_USER"), config.Config("DB_PASSWORD"), config.Config("DB_HOST"), config.Config("DB_PORT"), config.Config("DB_NAME"))
+	var err error
+
+	DB, err = gorm.Open(mysql.Open(dataSource), &gorm.Config{})
 
 	if err != nil {
 		panic(err.Error())
@@ -20,7 +23,5 @@ func InitDatabase() *gorm.DB {
 
 	fmt.Println("Connected!")
 
-	database.AutoMigrate(&model.Product{})
-
-	return database
+	DB.AutoMigrate(&model.Product{})
 }

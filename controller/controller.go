@@ -15,7 +15,13 @@ func GetAllProducts(c *fiber.Ctx) error {
 func GetProductById(c *fiber.Ctx) error {
 	var productId string = c.Params("id")
 
-	var product model.Product = service.GetProductById(productId)
+	product, rows := service.GetProductById(productId)
+
+	if rows == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"message": "Data not found",
+		})
+	}
 
 	return c.JSON(product)
 }
@@ -58,6 +64,10 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	var updatedProduct model.Product = service.UpdateProduct(productId, *productInput)
 
+	if updatedProduct.ID == "" {
+		return c.Status(404).JSON(fiber.Map{"message": "Data not found"})
+	}
+
 	return c.JSON(updatedProduct)
 }
 
@@ -67,25 +77,8 @@ func DeleteProduct(c *fiber.Ctx) error {
 	var result bool = service.DeleteProduct(productId)
 
 	if result {
-		c.SendString("Data deleted")
+		return c.JSON(fiber.Map{"message": "Data deleted"})
 	}
 
-	return nil
-}
-
-func parseRequest(c *fiber.Ctx, productInput model.ProductInput) error {
-	if err := c.BodyParser(productInput); err != nil {
-		return err
-	}
-	return nil
-}
-
-func validateRequest(productInput model.ProductInput) []*model.ErrorResponse {
-	errors := productInput.ValidateStruct()
-
-	if errors != nil {
-		return errors
-	}
-
-	return nil
+	return c.Status(404).JSON(fiber.Map{"message": "Data not found"})
 }
