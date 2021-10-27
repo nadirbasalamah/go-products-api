@@ -6,8 +6,6 @@ import (
 	"github.com/nadirbasalamah/go-products-api/model"
 )
 
-var storage []model.Product = []model.Product{}
-
 func GetAllProducts() []model.Product {
 	var products []model.Product
 
