@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/nadirbasalamah/go-products-api/model"
 	"github.com/nadirbasalamah/go-products-api/service"
+	"github.com/nadirbasalamah/go-products-api/utils"
 )
 
 func GetAllProducts(c *fiber.Ctx) error {
@@ -27,6 +28,12 @@ func GetProductById(c *fiber.Ctx) error {
 }
 
 func CreateProduct(c *fiber.Ctx) error {
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(400).JSON(fiber.Map{"message": err.Error()})
+	}
+
 	var productInput *model.ProductInput = new(model.ProductInput)
 
 	if err := c.BodyParser(productInput); err != nil {
@@ -46,6 +53,11 @@ func CreateProduct(c *fiber.Ctx) error {
 }
 
 func UpdateProduct(c *fiber.Ctx) error {
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(400).JSON(fiber.Map{"message": err.Error()})
+	}
 
 	var productInput *model.ProductInput = new(model.ProductInput)
 
@@ -72,6 +84,12 @@ func UpdateProduct(c *fiber.Ctx) error {
 }
 
 func DeleteProduct(c *fiber.Ctx) error {
+	isValid, err := utils.CheckToken(c)
+
+	if !isValid {
+		return c.Status(400).JSON(fiber.Map{"message": err.Error()})
+	}
+
 	var productId string = c.Params("id")
 
 	var result bool = service.DeleteProduct(productId)

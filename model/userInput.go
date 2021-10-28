@@ -3,7 +3,7 @@ package model
 import "github.com/go-playground/validator/v10"
 
 type UserInput struct {
-	Email    string `validate:"required"`
+	Email    string `validate:"required,email"`
 	Password string `validate:"required"`
 }
 

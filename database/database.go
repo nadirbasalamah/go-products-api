@@ -24,4 +24,6 @@ func InitDatabase() {
 	fmt.Println("Connected!")
 
 	DB.AutoMigrate(&model.Product{})
+
+	DB.AutoMigrate(&model.User{})
 }

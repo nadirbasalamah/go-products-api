@@ -7,14 +7,20 @@ import (
 	"github.com/nadirbasalamah/go-products-api/database"
 	"github.com/nadirbasalamah/go-products-api/model"
 	"github.com/nadirbasalamah/go-products-api/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(userInput model.UserInput) (string, error) {
-	//TODO: encrypt password
+	password, err := bcrypt.GenerateFromPassword([]byte(userInput.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return "", err
+	}
+
 	var user model.User = model.User{
 		ID:       uuid.New().String(),
 		Email:    userInput.Email,
-		Password: userInput.Password,
+		Password: string(password),
 	}
 
 	database.DB.Create(&user)
@@ -37,10 +43,9 @@ func Login(userInput model.UserInput) (string, error) {
 		return "", errors.New("User not found")
 	}
 
-	//TODO: encrypt password
-	var isMatch bool = user.Password == userInput.Password
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userInput.Password))
 
-	if !isMatch {
+	if err != nil {
 		return "", errors.New("Invalid password")
 	}
 
