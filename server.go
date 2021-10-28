@@ -13,5 +13,7 @@ func main() {
 
 	route.SetupRoutes(app)
 
+	route.SetupPrivateRoutes(app)
+
 	app.Listen(":3000")
 }
