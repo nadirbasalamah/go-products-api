@@ -54,6 +54,23 @@ func ExtractTokenMetadata(c *fiber.Ctx) (*TokenMetadata, error) {
 	return nil, err
 }
 
+func CheckToken(c *fiber.Ctx) (bool, error) {
+	now := time.Now().Unix()
+
+	claims, err := ExtractTokenMetadata(c)
+	if err != nil {
+		return false, err
+	}
+
+	expires := claims.Expires
+
+	if now > expires {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func extractToken(c *fiber.Ctx) string {
 	bearToken := c.Get("Authorization")
 

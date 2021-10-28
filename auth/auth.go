@@ -1,12 +1,11 @@
 package auth
 
 import (
-	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/nadirbasalamah/go-products-api/utils"
 )
 
+// NOT USED!
 func Register() (string, error) {
 	token, err := utils.GenerateNewAccessToken()
 
@@ -18,16 +17,9 @@ func Register() (string, error) {
 }
 
 func GetResources(c *fiber.Ctx) (string, error) {
-	now := time.Now().Unix()
+	isValid, err := utils.CheckToken(c)
 
-	claims, err := utils.ExtractTokenMetadata(c)
-	if err != nil {
-		return "", err
-	}
-
-	expires := claims.Expires
-
-	if now > expires {
+	if !isValid {
 		return "", err
 	}
 

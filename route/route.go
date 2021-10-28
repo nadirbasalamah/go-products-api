@@ -14,17 +14,19 @@ func SetupRoutes(app *fiber.App) {
 	app.Put("/api/products/:id", controller.UpdateProduct)
 	app.Delete("/api/products/:id", controller.DeleteProduct)
 
+	app.Post("/api/register", controller.Register)
+	app.Post("/api/login", controller.Login)
 	//test only, removed soon
-	app.Get("/api/register", func(c *fiber.Ctx) error {
-		jwtToken, err := auth.Register()
-		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"message": err.Error(),
-			})
-		}
+	// app.Get("/api/register", func(c *fiber.Ctx) error {
+	// 	jwtToken, err := auth.Register()
+	// 	if err != nil {
+	// 		return c.Status(400).JSON(fiber.Map{
+	// 			"message": err.Error(),
+	// 		})
+	// 	}
 
-		return c.JSON(fiber.Map{"token": jwtToken})
-	})
+	// 	return c.JSON(fiber.Map{"token": jwtToken})
+	// })
 }
 
 func SetupPrivateRoutes(app *fiber.App) {
